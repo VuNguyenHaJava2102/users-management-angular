@@ -1,0 +1,300 @@
+<div class="container">
+  <div class="row mb-2 mt-2 text-center">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <h5>User Management Portal</h5>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+
+  <nav
+    class="navbar navbar-expand-md breadcrumb p-3 rounded"
+    style="background-color: rgb(223, 218, 218)"
+  >
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <div class="nav nav-pills">
+        <a
+          class="nav-item nav-link ml-1"
+          routerLink="/user/management"
+          routerLinkActive="active"
+        >
+          <i class="fa fa-users"></i>
+          Users
+        </a>
+        <a
+          class="nav-item nav-link ml-3"
+          routerLink="/user/settings"
+          routerLinkActive="active"
+        >
+          <i class="fa fa-cogs"></i>
+          Settings
+        </a>
+        <a
+          class="nav-item nav-link move-right mr-3"
+          routerLink="/user/profile"
+          routerLinkActive="active"
+        >
+          <i class="fa fa-user"></i>
+          Welcome, {{ user.firstName + " " + user.lastName }}
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="row flex-lg-nowrap">
+    <div class="col">
+      <div class="row">
+        <div class="col mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="e-profile">
+                <div class="row">
+                  <div class="col-12 col-sm-auto">
+                    <div class="mx-auto" style="width: 120px">
+                      <div
+                        class="d-flex justify-content-center align-items-center rounded"
+                      >
+                        <img
+                          id="thumbnail"
+                          class="rounded profile-img"
+                          src="{{ user?.profileImageUrl }}"
+                          (click)="openInputProfileImage()"
+                          title="Click to change image."
+                        />
+                        <input
+                          id="inputProfileImage"
+                          type="file"
+                          hidden="true"
+                          (change)="
+                            inputProfileImageChange($event.target['files'][0])
+                          "
+                          accept="image/*"
+                        />
+                      </div>
+                      <div class="progress mt-1">
+                        <div
+                          class="progress-bar bg-info"
+                          role="progressbar"
+                          aria-valuenow="0"
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="col d-flex flex-column flex-sm-row justify-content-between mb-3"
+                  >
+                    <div class="text-sm-left mb-2 mb-sm-0">
+                      <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">
+                        {{ user?.firstName }} {{ user?.lastName }}
+                      </h4>
+                      <div
+                        *ngIf="user?.lastLoginDateDisplay !== null"
+                        class="text-muted"
+                      >
+                        <small
+                          >Last login:
+                          {{
+                            user?.lastLoginDateDisplay | date : "medium"
+                          }}</small
+                        >
+                      </div>
+                      <div class="mt-2">
+                        <button
+                          class="btn btn-primary"
+                          type="button"
+                          *ngIf="profileImage"
+                          (click)="updateProfileImage()"
+                        >
+                          <i class="fa fa-fw fa-camera me-1"></i>
+                          <span>Change Photo</span>
+                        </button>
+                        <i class="h6" *ngIf="!profileImage"
+                          >(Click profile image to change photo)</i
+                        >
+                      </div>
+                    </div>
+                    <div class="text-center text-sm-right">
+                      <div class="text-muted">
+                        <small
+                          >Joined
+                          {{ user?.joinDate | date : "mediumDate" }}</small
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-content pt-3">
+                  <div class="tab-pane active">
+                    <form
+                      #profileUserForm="ngForm"
+                      class="form"
+                      (ngSubmit)="onSubmitUser(profileUserForm.value)"
+                    >
+                      <!-- novalidate -->
+                      <div class="row">
+                        <div class="col">
+                          <div class="row mb-3">
+                            <div class="col">
+                              <!-- first name -->
+                              <div class="form-group">
+                                <label class="mb-1">First Name:</label>
+                                <input
+                                  class="form-control"
+                                  type="text"
+                                  name="firstName"
+                                  required
+                                  [ngModel]="user.firstName"
+                                />
+                              </div>
+                            </div>
+                            <div class="col">
+                              <!-- last name -->
+                              <div class="form-group">
+                                <label class="mb-1">Last Name:</label>
+                                <input
+                                  type="text"
+                                  name="lastName"
+                                  required
+                                  [ngModel]="user.lastName"
+                                  class="form-control"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row mb-3">
+                            <div class="col">
+                              <!-- username -->
+                              <div class="form-group">
+                                <label class="mb-1">Username:</label>
+                                <input
+                                  type="text"
+                                  name="username"
+                                  required
+                                  [ngModel]="user.username"
+                                  class="form-control"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <!-- email -->
+                          <div class="row mb-3">
+                            <div class="col">
+                              <div class="form-group">
+                                <label class="mb-1">Email:</label>
+                                <input
+                                  class="form-control"
+                                  type="text"
+                                  name="email"
+                                  required
+                                  [ngModel]="user.email"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <!-- role -->
+                          <div class="row">
+                            <div class="col mb-3">
+                              <div class="form-group">
+                                <label class="mb-1">Role: </label>
+                                <select
+                                  class="form-control"
+                                  name="role"
+                                  required
+                                  [ngModel]="user.role"
+                                >
+                                  <option value="ROLE_USER">USER</option>
+                                  <option value="ROLE_HR">HR</option>
+                                  <option value="ROLE_MANAGER">MANAGER</option>
+                                  <option value="ROLE_ADMIN">ADMIN</option>
+                                  <option value="ROLE_SUPER_ADMIN">
+                                    SUPER ADMIN
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12 col-sm-5 offset-sm-1 mb-3">
+                          <div class="mb-2"><b>Account Settings</b></div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="custom-controls-stacked px-2">
+                                <div class="custom-control custom-checkbox">
+                                  <input
+                                    class="custom-control-input me-1"
+                                    name="active"
+                                    type="checkbox"
+                                    [ngModel]="user.active"
+                                  />
+                                  <label class="custom-control-label"
+                                    >Active</label
+                                  >
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                  <input
+                                    class="custom-control-input me-1"
+                                    name="notLocked"
+                                    type="checkbox"
+                                    [ngModel]="user.notLocked"
+                                  />
+                                  <label class="custom-control-label"
+                                    >Unlocked</label
+                                  >
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- button -->
+                      <div class="row">
+                        <div class="col d-flex justify-content-end">
+                          <button class="btn btn-primary" type="submit">
+                            <i
+                              class="fas fa-spinner fa-spin me-1"
+                              *ngIf="refreshing"
+                            ></i>
+                            <span *ngIf="refreshing">Loading...</span>
+                            <span *ngIf="!refreshing">Save Changes</span>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- right aside -->
+        <div class="col-12 col-md-3 mb-3">
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="px-xl-3">
+                <button
+                  class="btn btn-block btn-secondary"
+                  (click)="onLogout()"
+                >
+                  <span class="me-2">Logout</span>
+                  <i class="fas fa-sign-in-alt"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <h6 class="card-title font-weight-bold">Permissions From Role</h6>
+              <h6 *ngFor="let authority of user?.authorities" class="card-text">
+                {{ authority }}
+              </h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

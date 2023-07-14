@@ -1,0 +1,74 @@
+<div class="container">
+  <div class="row mb-2 mt-2 text-center">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <h5>User Management Portal</h5>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+
+  <nav
+    class="navbar navbar-expand-md breadcrumb p-3 rounded"
+    style="background-color: rgb(223, 218, 218)"
+  >
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <div class="nav nav-pills">
+        <a
+          class="nav-item nav-link ml-1"
+          routerLink="/user/management"
+          routerLinkActive="active"
+        >
+          <i class="fa fa-users"></i>
+          Users
+        </a>
+        <a
+          class="nav-item nav-link ml-3"
+          routerLink="/user/settings"
+          routerLinkActive="active"
+          [hidden]="!isAdmin"
+        >
+          <i class="fa fa-cogs"></i>
+          Settings
+        </a>
+        <a
+          class="nav-item nav-link move-right mr-3"
+          routerLink="/user/profile"
+          routerLinkActive="active"
+        >
+          <i class="fa fa-user"></i>
+          Welcome, {{ loggedUser.firstName + " " + loggedUser.lastName }}
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <form
+    #resetPasswordForm="ngForm"
+    (ngSubmit)="onResetPassword(resetPasswordForm)"
+    [hidden]="!isAdmin"
+  >
+    <div>
+      <h3>User Password Management</h3>
+      <div class="form-group mb-3">
+        <label class="mb-2">Email address</label>
+        <input
+          class="form-control"
+          type="email"
+          name="reset-password-email"
+          required
+          ngModel
+          placeholder="Enter email (example@email.com)"
+        />
+      </div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="resetPasswordForm.invalid"
+      >
+        <i *ngIf="refreshing" class="fas fa-spinner fa-spin"></i>&nbsp;&nbsp;
+        <span *ngIf="refreshing">Loading...</span>
+        <span *ngIf="!refreshing">Reset Password</span>
+      </button>
+    </div>
+  </form>
+</div>

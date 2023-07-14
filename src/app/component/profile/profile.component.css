@@ -1,0 +1,10 @@
+.profile-img {
+  height: 135px;
+  width: 135px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.profile-img:hover {
+  border: 5px solid rgb(159, 159, 194);
+}
